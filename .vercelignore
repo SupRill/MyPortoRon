@@ -1,0 +1,7 @@
+# Only index.html, site.webmanifest, assets/ and LICENSE need to be public on Vercel.
+.github/
+.hallmark/
+check.mjs
+README.md
+assets/img/README.md
+assets/img/preview.png
