@@ -8,7 +8,6 @@ Personal portfolio of **Alfonsus Ronaldy Hidayat** (Information Systems, Univers
 
 ![First view of the portfolio: hero with a desert landscape at sunset](assets/img/preview.png)
 
-The image is a hero snapshot at 1440 × 900 from an earlier Indonesian build; the live text is now English. Run the site locally to see the current version.
 
 ## What is on the site
 
