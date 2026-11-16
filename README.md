@@ -1,194 +1,138 @@
 # Porto_Beta
 
-Portofolio pribadi **Alfonsus Ronaldy Hidayat** (Sistem Informasi, Universitas Multimedia Nusantara, Jakarta), bertema perbatasan akhir 1800-an dengan nama tema **DUSTY TRAIL PORTFOLIO**. Situs statis: HTML5, CSS3, JavaScript ES modules, tanpa build step.
+Personal portfolio of **Alfonsus Ronaldy Hidayat** (Information Systems, Universitas Multimedia Nusantara, Jakarta). The theme is a late-1800s frontier bounty board called **DUSTY TRAIL PORTFOLIO**. It is a static site: HTML5, CSS3 and JavaScript ES modules, with no build step and no `npm install`.
 
-**Status: beta, repository saja.** Belum dipublikasikan sebagai website; GitHub Pages dimatikan dan workflow deploy hanya berjalan manual. Konten disarikan dari CV pemilik dan repository GATE pilihan pemilik. Foto profil, tautan sosial, CV unduhan, dan endpoint form belum diisi.
-
-Untuk melihatnya, jalankan secara lokal (lihat **Menjalankan lokal**).
+**Status: beta.** The content follows the owner's latest resume, and the CV is downloadable from `assets/cv.pdf`. The profile photo, Instagram and the form endpoint are not filled in yet. The contact form is **not connected** until `contact.formEndpoint` is set in `data.js`; while it is empty, the form is shown but tells visitors to use email.
 
 ## Preview
 
-![Tampilan awal portofolio: hero dengan lanskap gurun senja](assets/img/preview.png)
+![First view of the portfolio: hero with a desert landscape at sunset](assets/img/preview.png)
 
-Gambar di atas adalah snapshot tampilan awal (hero) saat portofolio dibuka, diambil pada layar 1440 × 900. Jalankan server lokal untuk melihat lanskap senja, jurnal sepia, inventaris, poster interaktif, peta perjalanan, dan telegram. Identitas, pendidikan, skill dasar, pengalaman ISFEST, proyek Proxmox Home Server, dan email disarikan dari CV **Alfonsus Ronaldy Hidayat**. Foto profil masih placeholder; URL sosial, repository Proxmox, serta endpoint form belum diisi. Pratinjau Proxmox menggunakan screenshot dashboard homelab yang diberikan pemilik. Sertifikat kosong karena tidak tercantum di CV. Nomor telepon, alamat rumah, dan PDF CV belum dipublikasikan.
+The image is a hero snapshot at 1440 × 900 from an earlier Indonesian build; the live text is now English. Run the site locally to see the current version.
 
-Poster **GATE — Freelance & Social Impact** menampilkan preview halaman utama, penjelasan prototipe platform freelance berdampak sosial, teknologi, tautan [repository tim](https://github.com/amaliacalista26/GATE_PROJECT), dan stempel **SELESAI**. Status selesai merujuk pada prototipe front-end tugas UTS; backend belum tersedia dan interaksi masih simulasi.
+## What is on the site
 
-## Fitur
+- **Hero**: an original layered SVG desert with mesas, sun, cactus, birds and a tumbleweed. A short saloon-door intro plays once and never blocks clicks or the keyboard. Wooden trail signs at the foot of the hero show a greeting, a link into the trail and the owner's location.
+- **Education**: the UMN logo and degree details on a wooden plate, next to a 3D model of the UMN campus (Draco-compressed, about 229 KB). It never rotates on its own; it only turns when the visitor drags it. Every device first gets a small still image (80 KB). Desktops with WebGL then load the viewer and the model when the section comes near. Phones, touch devices, data-saver connections and browsers without WebGL keep the still and get a **Load the 3D campus** button, so nothing heavy downloads unless they ask.
+- **Traveler's Journal, Gear & Skills, The Trail So Far**: about text, skill ledger and experience route, on wooden plates and paper.
+- **Wanted Board**: project posters that flip by mouse, keyboard or touch.
+- **Contact**: icon badges for email, GitHub, LinkedIn and the CV download (Instagram and WhatsApp appear once set), plus a Formspree form with validation and a 15-second timeout. The form only sends once `contact.formEndpoint` is set.
+- **CV download**: `assets/cv.pdf`, linked from the about section and the contact badges. Leave `cv` empty in `data.js` to hide every CV link.
+- **Sheriff's Quick-Find**: the magnifier in the header, or `Ctrl`/`Cmd`+`K`, or `/`. Type to filter sections, project posters and contact links; arrow keys move, `Enter` goes, `Esc` closes. Choosing a project scrolls to its poster and flips it.
+- **Dusk/dawn toggle**: the sun/lantern button in the header switches between dawn (light) and dusk (dark). With nothing saved, the site follows the device's light/dark setting.
+- **Accessibility panel**: dusk mode, reduce motion, high contrast, text size 100–125% and reset. Choices are saved in the browser. The device's reduced-motion setting always wins.
+- Works without JavaScript for the landscape, navigation and the campus still. Personal content and the form need JavaScript.
 
-- Intro mesin ketik dengan progres sinematik dan pintu saloon. Progres bersifat dekoratif, bukan ukuran download. Intro otomatis selesai dan dapat dilewati dengan tombol keyboard apa pun.
-- Gurun SVG original: mesa berlapis, matahari, kaktus, burung, dan tumbleweed.
-- Parallax scroll GSAP, gerak mouse, debu canvas, bara pada mode malam, grain, vignette, crosshair, dan efek klik.
-- Jurnal foto sepia, ledger skill dengan indikator, poster yang bisa dibalik lewat mouse/keyboard/touch, stempel, serta garis rute tergambar.
-- Satu tombol **Aksesibilitas** membuka panel mode gelap, kurangi gerakan, kontras tinggi, ukuran teks 100–125%, serta reset. Preferensi tersimpan lokal; reduced-motion perangkat tetap diprioritaskan. Escape, tombol Tutup, atau klik di luar menutup panel dan mengembalikan fokus.
-- Form Formspree dengan validasi, timeout 15 detik, status pengiriman, dan isi tetap tersedia saat gagal.
-- Audio opsional OFF secara default. Tidak ada audio bawaan atau autoplay.
-- Layout responsif, skip link, fokus keyboard, alt gambar, lazy loading, serta fallback font dan CDN.
-- Offset anchor mengikuti tinggi navbar agar tujuan navigasi tidak tertutup pada ponsel.
-- GitHub Actions menerbitkan hanya file publik, tanpa build step.
-
-## Struktur
+## Structure
 
 ```text
 .
 ├── index.html
-├── README.md
-├── LICENSE
-├── .gitignore
-├── .nojekyll
-├── check.mjs
+├── site.webmanifest
+├── check.mjs                 developer check, not needed by the browser
 ├── assets/
-│   ├── css/
-│   │   ├── style.css
-│   │   └── animations.css
-│   ├── js/
-│   │   ├── data.js
-│   │   ├── main.js
-│   │   ├── particles.js
-│   │   └── cursor.js
-│   ├── img/
-│   │   ├── profile.svg
-│   │   ├── project.svg
-│   │   ├── preview.png
-│   │   ├── gate-preview.png
-│   │   ├── proxmox-preview.png
-│   │   └── README.md
-│   └── fonts/
-│       └── .gitkeep
-└── .github/
-    └── workflows/
-        └── deploy.yml
+│   ├── css/                  style.css, animations.css
+│   ├── js/                   data.js (content), main.js, particles.js, cursor.js
+│   ├── img/                  photos, previews, umn-campus.webp (+ 600px version)
+│   ├── icons/                favicon.svg, apple-touch-icon.png, icon-192.png, icon-512.png
+│   ├── models/               umn-campus.glb (Draco-compressed)
+│   └── cv.pdf                downloadable CV
+└── .github/workflows/deploy.yml
 ```
 
-`.gitkeep` mempertahankan folder font kosong di Git; `.nojekyll` kosong memang disengaja. `check.mjs` hanya pemeriksaan pengembang, tidak diperlukan browser.
+## Edit the content in one file
 
-## Edit konten dari satu file
-
-1. Buka `assets/js/data.js`.
-2. Cari komentar **GANTI INI** dan token `[[...]]`.
-3. Ganti nilai dummy, bukan nama properti. Contoh:
+1. Open `assets/js/data.js`.
+2. Look for the **EDIT HERE** comments and the `[[...]]` tokens.
+3. Change the values, not the property names:
 
    ```js
-   name: 'Nama Lengkap Anda',
+   name: 'Your Full Name',
    role: 'Front-end Developer',
-   tagline: 'Pengalaman digital yang terasa manusiawi.',
+   tagline: 'Digital work that feels human.',
    ```
 
-4. Tambah/hapus objek dalam `skills`, `projects`, atau `experience`. Halaman merender jumlah item otomatis.
-   `skills[].level` menerima teks seperti `'Dasar'` atau angka 0–100. Teks tidak diubah menjadi persentase; progress bar hanya muncul bila Anda mengisi angka penilaian sendiri.
-5. Kosongkan `cv`, URL sosial, demo, GitHub, atau `ambientAudio` jika belum tersedia. Tombol CV/sosial/audio disembunyikan; tautan proyek diberi label belum tersedia.
-6. Isi `contact.formEndpoint` dengan endpoint Formspree asli, misalnya `https://formspree.io/f/abcdefgh`. Buat form di dashboard Formspree, verifikasi email, lalu salin endpoint. Gunakan Formspree karena handler bawaan memvalidasi host dan rute tersebut.
-7. Isi WhatsApp dengan nomor internasional tanpa `+`, spasi, atau tanda hubung. Contoh format: `6281234567890`.
+4. Add or remove objects in `skills`, `projects` or `experience`. The page renders however many there are. `skills[].level` takes text or a number from 0 to 100; a progress bar appears only for a number.
+5. Leave `cv`, social URLs, `demo`, `github` or `ambientAudio` empty when you do not have them. Empty links and buttons are hidden, and Quick-Find leaves them out.
+6. Set `contact.formEndpoint` to a real Formspree endpoint such as `https://formspree.io/f/abcdefgh`. Only that host and route are accepted.
+7. Write WhatsApp as an international number with no `+`, spaces or dashes, for example `6281234567890`.
 
-Komentar placeholder tetap dipertahankan sebagai panduan. Teks tidak dimasukkan sebagai HTML mentah. Semua nilai JavaScript dan endpoint akan terlihat publik; jangan menaruh secret atau token privat.
+Text is never inserted as raw HTML. Everything in `data.js` is public, so do not put secrets in it.
 
-### Yang perlu saya ganti
+### Images
 
-- [ ] Nama tema, nama lengkap, role, tagline, lokasi.
-- [ ] Dua paragraf tentang saya, caption dan alt foto.
-- [ ] Foto profil; pratinjau GATE dan Proxmox sudah tersedia.
-- [ ] Tinjau skill dan level sesuai CV; angka persentase opsional, bukan skor otomatis.
-- [ ] Judul, deskripsi, tech stack, status, URL demo dan GitHub proyek.
-- [ ] Perusahaan, jabatan, periode, deskripsi pengalaman.
-- [ ] Tinjau pendidikan dan tambahkan sertifikat hanya jika ada.
-- [ ] Email, WhatsApp, LinkedIn, GitHub, Instagram.
-- [ ] File CV dan `cv: 'assets/cv.pdf'` setelah file tersedia.
-- [ ] Endpoint Formspree dan uji kirim nyata.
-- [ ] Judul, deskripsi, URL situs, dan gambar Open Graph.
-- [ ] Audio ambient milik sendiri bila diperlukan.
+- Profile photo: 600 × 800, for example `assets/img/profile.webp`; set `profile.image` and `profile.alt`.
+- Project preview: 1200 × 750; set `projects[].image` and `projects[].alt`.
+- Social preview: a 1200 × 630 JPG or PNG in `seo.image`.
+- Paths are relative to `index.html`, with no leading slash.
 
-## Ganti gambar
+## Run it locally
 
-1. Simpan foto profil sendiri, disarankan 600 × 800, ke `assets/img/profile.webp`.
-2. Simpan pratinjau proyek, disarankan 1200 × 750, misalnya `assets/img/project-1.webp`.
-3. Ubah `profile.image` dan setiap `projects[].image` di `data.js`.
-4. Tulis alt yang menjelaskan isi gambar, bukan nama file.
-5. Sediakan JPG/PNG 1200 × 630 untuk Open Graph. SVG placeholder sering tidak didukung crawler sosial.
+ES modules need HTTP, so do not open `index.html` from `file://`.
 
-Semua path aset lokal relatif terhadap `index.html`, tanpa garis miring di awal. URL pihak ketiga, email, dan URL canonical merupakan pengecualian yang memang membutuhkan URL lengkap.
+```bash
+python -m http.server 8080
+```
 
-## Menjalankan lokal
+Open `http://localhost:8080/` and press `Ctrl+C` to stop.
 
-1. Buka terminal di folder proyek.
-2. Jalankan Python 3:
+## Check before publishing
 
-   ```bash
-   python -m http.server 8080
-   ```
+Needs Node.js 18 or newer and nothing else:
 
-3. Buka `http://localhost:8080/`. Jangan membuka `index.html` melalui `file://`: ES modules memerlukan HTTP.
-4. Tekan `Ctrl+C` untuk menghentikan server.
-5. Pemeriksaan file dan data opsional, dengan Node.js 18+:
+```bash
+node check.mjs
+```
 
-   ```bash
-   node check.mjs
-   ```
+It checks the data shape, anchors and ARIA references, that every referenced file exists (images, icons, manifest, CV), that the campus model is Draco-compressed and at most 300 KB, that nothing sets `auto-rotate`, that model-viewer is pinned and loaded only from `main.js`, and that no `<h2>` contains a `<br>`.
 
-Tidak ada `npm install`, bundler, atau build. Python/Node hanya alat lokal; bukan dependency produksi.
-
-## Test sebelum publikasi
-
-- Periksa lebar 360px, 768px, 1280px, dan 3840px; zoom 200%; gunakan Tab/Shift+Tab/Enter/Escape.
-- Untuk screenshot halaman penuh, gulir melewati bagian proyek terlebih dahulu agar gambar lazy-load selesai dimuat.
-- Balik dan kembalikan semua poster. Sisi tersembunyi memakai `inert` supaya tidak ikut urutan fokus.
-- Buka Aksesibilitas; uji mode gelap, kurangi gerakan, kontras, ukuran teks, persistensi setelah refresh, dan reset. Uji Tab/Shift+Tab tetap di panel dan Escape kembali ke tombol pembuka. Aktifkan reduced-motion di OS; reset tidak boleh mengaktifkan efek berat.
-- Coba form kosong, email tidak valid, endpoint kosong, jaringan gagal, lalu endpoint Formspree nyata.
-- Blokir CDN GSAP: konten dan form tetap berfungsi, efek scroll tambahan dilewati.
-- Nonaktifkan JavaScript: lanskap, struktur, navigasi, dan pesan fallback tetap tampil. Data pribadi dari ES module tidak dapat dirender tanpa JavaScript; form dinonaktifkan.
-- Jalankan Lighthouse lewat Chrome DevTools pada deployment. Target 90+ adalah sasaran, bukan skor terverifikasi. GPU, jaringan, CDN, dan gambar pengganti memengaruhi hasil; 60fps tidak dapat dijamin di semua perangkat.
-
-### SEO dan crawler sosial
-
-Metadata generik tersedia di `index.html`; JavaScript menggantinya dari `data.seo`. Banyak bot Open Graph tidak menjalankan JavaScript. Untuk metadata personal tanpa menggandakan sumber konten, setelah mengedit data jalankan:
+To copy the title, description and Open Graph tags from `data.js` into `index.html` (many social crawlers do not run JavaScript), set `seo.url` first and run:
 
 ```bash
 node check.mjs --sync-meta
 ```
 
-Perintah ini menyelaraskan title, description, Open Graph, dan canonical ke HTML. Isi `seo.url` dengan URL publik terlebih dahulu supaya gambar Open Graph menjadi URL absolut. Ini langkah publikasi **opsional**, bukan build step wajib. Ulangi setelah perubahan SEO; data pribadi tetap diedit hanya di `data.js`.
+Manual checks worth doing: widths 360, 768 and 1280; keyboard only (Tab, Enter, Escape, Quick-Find); dusk mode, high contrast and large text; reduced motion on the device; JavaScript off; the form with an empty and a real endpoint.
 
-## Git dan deploy GitHub Pages (opsional, belum dipakai)
+## The 3D campus model
 
-Bagian ini hanya panduan untuk nanti. Beta ini sengaja tidak dideploy. Untuk mempublikasikan: lakukan langkah 3-4, kembalikan trigger `push` pada `.github/workflows/deploy.yml`, lalu jalankan workflow.
+The model was built by the owner in Blender. It has 30 solid-colour materials and no textures. The original export is 2.36 MB; the file in this repo is the Draco-compressed copy (about 229 KB). To compress a new export, run this outside the repo:
 
-1. Buat repository kosong di GitHub. Repository ini bernama `Porto_Beta`. Untuk GitHub Free, gunakan repository publik.
-2. Dari folder proyek jalankan:
+```bash
+npx @gltf-transform/cli@4.5.1 draco in.glb out.glb
+```
 
-   ```bash
-   git init
-   git add .
-   git commit -m "Create Dusty Trail portfolio"
-   git branch -M main
-   git remote add origin https://github.com/SupRill/Porto_Beta.git
-   git push -u origin main
-   ```
+`in.glb` is the original Blender export; copy `out.glb` to `assets/models/umn-campus.glb`. Do not use `gltf-transform optimize`: its defaults add a palette texture. If the logo looks jagged after compression, add `--quantize-position 16`.
 
-3. Di repository, buka **Settings → Pages → Build and deployment**.
-4. Pilih **Source: GitHub Actions**.
-5. Buka tab **Actions**, pilih workflow **Deploy static portfolio to GitHub Pages**, lalu **Run workflow** pada branch `main`. Bila push awal gagal sebelum Pages diaktifkan, jalankan ulang setelah langkah 4.
-6. Tunggu workflow berhasil. URL tersedia pada environment `github-pages` dan halaman Settings → Pages.
-7. Setelah berhasil, situs tersedia di `https://suprill.github.io/Porto_Beta/`.
-8. Setiap push berikutnya ke `main` otomatis memperbarui situs.
+Keep the uncompressed original somewhere outside the repo. If the model changes shape, render the still again at the same camera (`camera-orbit="-25deg 65deg 68%"`) and replace `assets/img/umn-campus.webp` (1200 × 900) and `assets/img/umn-campus-600.webp`, so the swap from still to model does not jump.
 
-Workflow hanya menyalin `index.html`, `assets/`, `.nojekyll`, dan `LICENSE` ke artifact publik. Tidak memerlukan token rahasia tambahan; izin Pages memakai token bawaan GitHub.
+A Draco model needs the Draco decoder, which model-viewer fetches from `www.gstatic.com`. If that or the viewer script is blocked, the page keeps the still and says "3D view unavailable".
 
-## Warna, font, kecepatan
+## Deploy
 
-- **Warna:** edit token `:root` di `assets/css/style.css`. Override mode malam di `:root[data-theme="night"]`.
-- **Font:** edit `--font-display`, `--font-heading`, `--font-body`, `--font-label`, serta URL stylesheet/preload Google Fonts di `index.html`. Gunakan font OFL dari Google Fonts.
-- **Kecepatan GSAP/intro:** edit `motion.duration`, `motion.intro` di `data.js`, satuan detik.
-- **Jumlah debu:** edit `motion.particles`; dibatasi 60, maksimal 20 pada ponsel.
-- **Loop CSS:** edit durasi di `animations.css`: matahari 35s, burung 30s, tumbleweed 23s. Lebih besar berarti lebih lambat.
-- **Efek hover/flip:** durasi berada pada selector terkait di `style.css`.
+**Vercel**: the site is static with no build step. Import the repository, set Framework Preset to **Other**, leave Build Command empty (no build) and set Output Directory to `.` (the repository root). `.vercelignore` keeps `README.md`, `check.mjs` and `.github/` out of the upload. After the first deploy, put the production URL in `seo.url`, then run `node check.mjs --sync-meta`.
 
-## Credit dan lisensi
+**GitHub Pages** (alternative, manual trigger): in **Settings → Pages**, set the source to **GitHub Actions**, then run the workflow **Deploy static portfolio to GitHub Pages** from the Actions tab. It publishes only `index.html`, `site.webmanifest`, `assets/`, `.nojekyll` and `LICENSE`.
 
-- Kode, CSS, SVG, placeholder, serta gambar dekoratif original proyek: [MIT](LICENSE).
-- [Rye](https://fonts.google.com/specimen/Rye), [IM Fell English SC](https://fonts.google.com/specimen/IM+Fell+English+SC), [IM Fell English](https://fonts.google.com/specimen/IM+Fell+English), [Special Elite](https://fonts.google.com/specimen/Special+Elite): Google Fonts, SIL Open Font License. Jika self-host, salin berkas OFL font bersama file font.
-- [GSAP 3.12.5 dan ScrollTrigger 3.12.5](https://gsap.com/): dimuat melalui jsDelivr; library memiliki [lisensi tersendiri](https://gsap.com/community/standard-license/), tidak dilisensikan ulang sebagai MIT oleh proyek ini.
-- [Formspree](https://formspree.io/): layanan pihak ketiga opsional untuk penerimaan form; kuota mengikuti akun pemilik.
-- `assets/img/preview.png` adalah screenshot portofolio ini. `assets/img/gate-preview.png` bersumber dari `asset/preview-home.png` di [GATE_PROJECT](https://github.com/amaliacalista26/GATE_PROJECT); gambar dan merek di dalamnya mengikuti hak pemilik masing-masing, bukan lisensi MIT kode portofolio.
-- `assets/img/proxmox-preview.png` adalah screenshot dashboard homelab yang diberikan pemilik; merek layanan di dalamnya mengikuti hak pemilik masing-masing.
-- Tidak ada musik, sound effect, atau aset franchise western yang disertakan.
+## Colours, fonts and speed
 
-Proyek ini **fan-inspired oleh estetika western sinematik secara umum**, bukan adaptasi aset tertentu, dan **tidak berafiliasi, disponsori, atau didukung pihak mana pun**. Hak cipta karya original tetap ada dan diberikan melalui MIT; font/library mengikuti lisensi masing-masing. Gunakan hanya foto, CV, dan audio yang Anda miliki atau punya izin penggunaan.
+- **Colours**: the tokens in `:root` in `assets/css/style.css`. Dusk overrides are in `:root[data-theme="night"]`.
+- **Fonts**: `--font-display`, `--font-heading`, `--font-body`, `--font-label`, plus the Google Fonts URL in `index.html`.
+- **Animation speed**: `motion.duration` and `motion.intro` in `data.js`, in seconds. `motion.particles` sets the dust count.
+- **CSS loops**: durations in `assets/css/animations.css`.
+
+## Credits and licences
+
+- Code, CSS, SVG artwork, placeholders and icons made for this project: [MIT](LICENSE).
+- Fonts: [Rye](https://fonts.google.com/specimen/Rye), [IM Fell English SC](https://fonts.google.com/specimen/IM+Fell+English+SC), [IM Fell English](https://fonts.google.com/specimen/IM+Fell+English) and [Special Elite](https://fonts.google.com/specimen/Special+Elite), served by Google Fonts. Rye and the IM Fell faces are under the SIL Open Font License; check each specimen page for the licence before self-hosting.
+- [GSAP 3.12.5 and ScrollTrigger](https://gsap.com/), loaded from jsDelivr, under GSAP's own [standard licence](https://gsap.com/community/standard-license/). Not relicensed here.
+- [`<model-viewer>` 4.0.0](https://modelviewer.dev/) by Google, Apache-2.0, loaded from jsDelivr only when the 3D view is shown.
+- [Draco](https://google.github.io/draco/) mesh compression by Google, Apache-2.0. The decoder is fetched from gstatic by model-viewer. Compression was done with [glTF Transform](https://gltf-transform.dev/) (MIT).
+- [Formspree](https://formspree.io/): optional third-party form service; limits follow the owner's account.
+- `assets/models/umn-campus.glb` and the stills `assets/img/umn-campus*.webp`: a 3D model of the UMN campus made by the site owner in Blender.
+- `assets/img/umn-logo.png`, and the logo as it appears on the model: the Universitas Multimedia Nusantara name and logo are trademarks of UMN. They are shown only to identify the owner's university, are not covered by this project's MIT licence, and do not imply endorsement by UMN.
+- `assets/img/gate-preview.webp` comes from `asset/preview-home.png` in [GATE_PROJECT](https://github.com/amaliacalista26/GATE_PROJECT). `assets/img/proxmox-preview.webp` is a cropped screenshot of the owner's homelab dashboard. Marks shown in both belong to their owners.
+- `assets/img/preview.png` and `assets/img/og-image.png` are screenshots of this site.
+- No music, sound effects or assets from any western game or film are included.
+
+The look is inspired by cinematic westerns in general. It adapts no specific work and is not affiliated with, sponsored by or endorsed by anyone. Use only photos, a CV and audio that you own or have permission to use.
