@@ -275,12 +275,17 @@ function campus() {
   observer.observe(stage);
 }
 
+// Fallback for browsers without <dialog closedby="any"> (Safari). Press and release must both be
+// outside, so a text-selection drag that ends on the backdrop does not close the dialog.
 function closeOnBackdrop(dialog) {
-  dialog.addEventListener('click', (event) => {
-    if (event.target !== dialog) return;
+  if ('closedBy' in HTMLDialogElement.prototype) return;
+  const outside = (event) => {
     const box = dialog.getBoundingClientRect();
-    if (event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom) dialog.close();
-  });
+    return event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom;
+  };
+  let pressedOutside = false;
+  dialog.addEventListener('pointerdown', (event) => { pressedOutside = event.target === dialog && outside(event); });
+  dialog.addEventListener('pointerup', (event) => { if (pressedOutside && event.target === dialog && outside(event)) dialog.close(); });
 }
 
 // Sheriff's Quick-Find: substring search over sections, posters and contact links. Run after render().
