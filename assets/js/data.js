@@ -7,7 +7,7 @@ export const data = {
     title: 'Alfonsus Ronaldy Hidayat | Dusty Trail Portfolio',
     description: 'Alfonsus Ronaldy Hidayat, Information Systems student at Universitas Multimedia Nusantara. Interested in data analytics, database management, data engineering, and self-hosting.',
     // [[SITE_URL]] example: https://your-site.vercel.app/
-    url: '',
+    url: 'https://myportoron.vercel.app/',
     // [[OG_IMAGE]] Use your own 1200x630 JPG/PNG for the social preview.
     image: 'assets/img/og-image.png'
   },
@@ -67,7 +67,7 @@ export const data = {
     linkedin: 'https://www.linkedin.com/in/alfonsus-ronaldy-hidayat/',
     github: 'https://github.com/SupRill',
     instagram: '', // e.g. 'https://www.instagram.com/username/'
-    formEndpoint: '' // Empty = form shows but does not send. Example: 'https://formspree.io/f/abcdefgh'
+    formEndpoint: 'https://formspree.io/f/mgakzrrn' // Empty = form shows but does not send. Example: 'https://formspree.io/f/abcdefgh'
   },
   // EDIT HERE: [[AMBIENT_AUDIO]]; empty = sound button hidden.
   ambientAudio: '', // e.g. 'assets/ambient.mp3', must be your own or licensed.
