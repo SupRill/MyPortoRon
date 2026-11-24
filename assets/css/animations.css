@@ -10,7 +10,10 @@
 #loader.is-opening { background: var(--clear); }
 .is-opening .door-right { animation: door-right .8s var(--ease) forwards; }
 .is-opening .loader-copy { opacity: 0; transition: opacity .25s; }
-#cursor { position: fixed; left: 0; top: 0; width: 28px; height: 28px; border: 1px solid var(--parchment-dark); border-radius: 50%; pointer-events: none; z-index: 80; margin: -14px; mix-blend-mode: difference; }
+#cursor { position: fixed; left: 0; top: 0; width: 28px; height: 28px; border: 1px solid var(--parchment-dark); border-radius: 50%; pointer-events: none; z-index: 80; margin: -14px; mix-blend-mode: difference; will-change: transform; }
+/* The crosshair replaces the system pointer only while it runs (JS adds .custom-cursor). Text fields keep the caret; high contrast keeps the system pointer because it hides the crosshair. */
+.custom-cursor:not(.high-contrast), .custom-cursor:not(.high-contrast) * { cursor: none !important; }
+.custom-cursor:not(.high-contrast) :is(input, textarea, select) { cursor: auto !important; }
 #cursor::before, #cursor::after { content: ''; position: absolute; background: var(--parchment); }
 #cursor::before { width: 1px; height: 38px; top: -6px; left: 13px; }
 #cursor::after { height: 1px; width: 38px; top: 13px; left: -6px; }
@@ -25,7 +28,13 @@
 .motion-on h1 { animation: ink-flicker 9s linear infinite; }
 .motion-on .stamp.hit { animation: stamp-hit .45s var(--ease) both; }
 .motion-on .poster.shake { animation: stamp-shake .25s linear; }
-.motion-on .site-header.is-sticky { animation: sign-swing .7s var(--ease); }
+/* The plank sways on its ropes once on arrival and whenever scrolling starts again after a pause. */
+.motion-on .nav-shell.is-swinging { animation: plank-swing 1.6s ease-out; }
+/* Lantern flame: a soft irregular flicker, only at dusk and only with motion on. */
+:root.motion-on[data-theme="night"] .lantern-fire { animation: flame-flicker 2.6s ease-in-out infinite; transform-box: fill-box; transform-origin: 50% 100%; }
+:root.motion-on[data-theme="night"] .lantern-halo { animation: halo-flicker 2.6s ease-in-out infinite; }
+@keyframes flame-flicker { 0%, 100% { transform: scale(1, 1); } 18% { transform: scale(.94, 1.06); } 37% { transform: scale(1.04, .95); } 55% { transform: scale(.97, 1.03); } 78% { transform: scale(1.02, .98); } }
+@keyframes halo-flicker { 0%, 100% { opacity: 1; } 22% { opacity: .82; } 47% { opacity: .95; } 70% { opacity: .86; } }
 .hero-offscreen .landscape *, .page-hidden * { animation-play-state: paused !important; }
 @keyframes rope-load { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 @keyframes door-left { to { transform: perspective(800px) rotateY(-100deg) translateX(-30%); } }
@@ -40,11 +49,11 @@
 @keyframes stamp-hit { from { transform: rotate(-12deg) scale(1.6); opacity: 0; } to { transform: rotate(-12deg) scale(1); opacity: .8; } }
 @keyframes stamp-shake { 25% { transform: translateX(-2px) rotate(var(--rotation)); } 75% { transform: translateX(2px) rotate(var(--rotation)); } }
 @keyframes bullet-fade { 0% { opacity: .9; } 100% { opacity: 0; transform: translate(-50%,-50%) scale(1.2); } }
-@keyframes sign-swing { 0% { transform: rotate(-.5deg); } 50% { transform: rotate(.3deg); } 100% { transform: rotate(0); } }
+@keyframes plank-swing { 15% { transform: rotate(1.1deg); } 38% { transform: rotate(-.8deg); } 60% { transform: rotate(.45deg); } 80% { transform: rotate(-.2deg); } 100% { transform: rotate(0); } }
 html.motion-paused { scroll-behavior: auto; }
 .motion-paused *, .motion-paused *::before, .motion-paused *::after { animation: none !important; transition: none !important; }
 .motion-paused .scene { translate: none; }
-.motion-paused .sun-layer { transform: none !important; }
+.motion-paused .sun-layer { transform: none !important; translate: none !important; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }

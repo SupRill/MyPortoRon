@@ -8,13 +8,14 @@ The site is a late-1800s frontier bounty board: wooden signs and plates, parchme
 
 ## Sections
 
-- **Hero**: a layered SVG desert with mesas, sun, cactus, birds and a tumbleweed. A short saloon-door intro plays once. Three wooden trail signs at the foot of the hero carry a greeting, a link down the trail and the location. Each sign sways when hovered.
-- **Education**: the UMN logo and degree details on a wooden plate, with a "Semester 5" stamp, beside an interactive 3D model of the UMN campus. The model never spins by itself; it turns when dragged.
+- **Navigation**: one fixed wooden plank hung on two ropes; it sways when scrolling starts.
+- **Hero**: a layered SVG desert with mesas, sun (a crescent moon in dusk mode), cactus, birds and a tumbleweed, with scroll parallax. A short saloon-door intro plays once. Three wooden trail signs at the foot of the hero carry a greeting, a link down the trail and the location. Each sign sways when hovered.
+- **Education**: the UMN logo and degree details on a wooden plate, with a "Semester 5" stamp, beside an interactive 3D model of the UMN campus pinned on a blank bounty sheet. The model never spins by itself; it turns when dragged.
 - **Traveler's Journal**: the profile summary, a character illustration of a database rack in a cowboy hat, and a CV download button.
-- **Gear & Skills**: the skill ledger by category.
+- **Gear & Skills**: a grid of wooden boards, one per category, with logo chips for tools and plain tags for concepts. Logos live in `assets/icons/skills/`, flags in `assets/icons/flags/`.
 - **Wanted Board**: the projects as wanted posters that flip to show the story behind each one.
 - **The Trail So Far**: experience as a route on the map.
-- **Contact Me**: round icon links for email, GitHub, LinkedIn and the CV, plus a message form.
+- **Contact Me**: an underground mine drift with timber sets, a railway and a hanging lantern (out by day, lit in dusk mode). Round icon links for email, GitHub, LinkedIn and the CV, plus a message form pinned to a post. The drift runs on under the footer, which ends in rock fall.
 
 ## Features
 

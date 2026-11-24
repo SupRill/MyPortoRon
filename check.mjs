@@ -15,7 +15,13 @@ const escape = (value) => String(value).replace(/[&<>"']/g, (c) => ({ '&': '&amp
 assert(data.name && data.role && data.themeName, 'Identity fields are required');
 assert(data.education?.school && Array.isArray(data.education.interests), 'education needs school and interests');
 for (const key of ['skills', 'projects', 'experience', 'about', 'certificates']) assert(Array.isArray(data[key]), `${key} must be an array`);
-for (const skill of data.skills) assert(typeof skill.level === 'string' ? skill.level.trim().length > 0 : Number.isFinite(skill.level) && skill.level >= 0 && skill.level <= 100, `Invalid level: ${skill.name}`);
+for (const skill of data.skills) {
+  assert(skill.name && skill.detail, 'Each skill category needs a name and a detail');
+  assert((skill.tools?.length || 0) + (skill.tags?.length || 0) > 0, `Skill category is empty: ${skill.name}`);
+  assert(!skill.size || ['wide', 'half'].includes(skill.size), `Unknown size: ${skill.name}`);
+  for (const tag of skill.tags || []) assert(typeof tag === 'string' ? tag.trim() : tag.name && /^[a-z0-9-]+$/.test(tag.flag), `Tag needs text, or a name and a plain flag name: ${skill.name}`);
+  for (const tool of skill.tools || []) assert(tool.name && /^[a-z0-9-]+$/.test(tool.icon), `Tool needs a name and a plain icon name: ${tool.name}`);
+}
 for (const project of data.projects) assert(project.title && Array.isArray(project.tech), 'Each project needs a title and a tech array');
 assert(!data.cv || data.cv.endsWith('.pdf'), 'data.cv must point to a .pdf file');
 const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map((match) => match[1]);
@@ -25,7 +31,7 @@ for (const [, id] of html.matchAll(/href="#([^"]+)"/g)) assert(ids.includes(id),
 // Every local file the page, the data or the manifest points at must exist.
 const manifest = JSON.parse(await readFile(path.join(root, 'site.webmanifest'), 'utf8'));
 assert(html.includes('rel="manifest" href="site.webmanifest"') && manifest.short_name && manifest.icons?.length, 'Manifest is missing or incomplete');
-const assets = [data.profile.image, ...data.projects.map((project) => project.image), data.cv, data.ambientAudio, data.seo.image, ...manifest.icons.map((icon) => icon.src), 'assets/models/umn-campus.glb'];
+const assets = [...data.skills.flatMap((skill) => (skill.tools || []).map((tool) => `assets/icons/skills/${tool.icon}.svg`)), ...data.skills.flatMap((skill) => (skill.tags || []).filter((tag) => tag.flag).map((tag) => `assets/icons/flags/${tag.flag}.svg`)), data.profile.image, ...data.projects.map((project) => project.image), data.cv, data.ambientAudio, data.seo.image, ...manifest.icons.map((icon) => icon.src), 'assets/models/umn-campus.glb'];
 for (const [, value] of html.matchAll(/(?:src|href)="(assets\/[^"]+)"/g)) assets.push(value);
 for (const [, value] of html.matchAll(/srcset="([^"]+)"/g)) assets.push(...value.split(',').map((entry) => entry.trim().split(/\s+/)[0]));
 for (const asset of new Set(assets.filter(Boolean))) {

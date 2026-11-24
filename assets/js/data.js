@@ -36,16 +36,25 @@ export const data = {
   certificates: [], // The resume lists no certificates.
   // EDIT HERE: [[CV_LINK: assets/cv.pdf]]; empty = button hidden.
   cv: 'assets/cv.pdf', // Empty = the download links are hidden.
-  // EDIT HERE: skills by category, as in the resume.
-  // A 0–100 number is optional, only if you set your own rating.
+  // EDIT HERE: skills by category, as in the resume. Each category is one board in the grid.
+  // tools: chips with a logo (icon = file in assets/icons/skills/). tags: concepts without a logo;
+  // a tag can be { name, flag } to show a small flag from assets/icons/flags/.
+  // size: 'wide' (two thirds of a row) or 'half' (half a row); leave it out for a third.
   skills: [
-    { name: 'Programming', level: 'Python · Java · JavaScript', detail: 'Data analysis, deep learning, and web prototypes' },
-    { name: 'Databases', level: 'SQL · Database Management', detail: 'Data modelling, administration, and development' },
-    { name: 'Data Analytics', level: 'Cleaning · Preprocessing · EDA · Visualization', detail: 'From raw data to findings that are easy to read' },
-    { name: 'Data Engineering', level: 'Docker · Linux · Proxmox VE', detail: 'Self-hosted services on a personal home server' },
-    { name: 'Tools', level: 'Tableau · Power BI · Excel', detail: 'Also VS Code, Conda, Jupyter Notebook, and GitHub' },
-    { name: 'Soft Skills', level: 'Communication · Teamwork', detail: 'Adaptability and building strong working relationships' },
-    { name: 'Languages', level: 'Indonesian & English', detail: 'Used in study and work' }
+    { name: 'Programming', detail: 'Data analysis, deep learning, and web prototypes',
+      tools: [{ name: 'Python', icon: 'python' }, { name: 'Java', icon: 'java' }, { name: 'JavaScript', icon: 'javascript' }] },
+    { name: 'Tools', size: 'wide', detail: 'Dashboards, spreadsheets, notebooks, and version control',
+      tools: [{ name: 'Tableau', icon: 'tableau' }, { name: 'Power BI', icon: 'powerbi' }, { name: 'Excel', icon: 'excel' }, { name: 'VS Code', icon: 'vscode' }, { name: 'Conda', icon: 'anaconda' }, { name: 'Jupyter Notebook', icon: 'jupyter' }, { name: 'GitHub', icon: 'github' }] },
+    { name: 'Databases', detail: 'Data modelling, administration, and development',
+      tools: [{ name: 'SQL', icon: 'sql' }], tags: ['Database Management'] },
+    { name: 'Data Engineering', detail: 'Self-hosted services on a personal home server',
+      tools: [{ name: 'Docker', icon: 'docker' }, { name: 'Linux', icon: 'linux' }, { name: 'Proxmox VE', icon: 'proxmox' }] },
+    { name: 'Data Analytics', detail: 'From raw data to findings that are easy to read',
+      tags: ['Cleaning', 'Preprocessing', 'EDA', 'Visualization'] },
+    { name: 'Soft Skills', size: 'half', detail: 'Building strong working relationships',
+      tags: ['Communication', 'Teamwork', 'Adaptability'] },
+    { name: 'Languages', size: 'half', detail: 'Used in study and work',
+      tags: [{ name: 'Indonesian', flag: 'id' }, { name: 'English', flag: 'gb-eng' }] }
   ],
   // EDIT HERE: [[PROJECT_1..N: title, description, tech stack, demo link, GitHub link, image]]
   // Projects follow the resume. Do not link internal homelab dashboards from the public site.

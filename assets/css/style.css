@@ -21,6 +21,8 @@
   --surface: #292119; --text: #efdfb9; --quiet: #cfb88e; --accent: #efb365;
   --sky-top: #191b22; --sky-bottom: #765039; --sun: #d8be8b;
   --mesa-far: #524338; --mesa-mid: #36312c; --mesa-near: #201b17; color-scheme: dark;
+  /* Thinner hero shade at night so the moon reads bright; the night sky is already dark enough to carry the light hero text. */
+  --hero-shade: #120c0838;
 }
 :root.high-contrast { --surface: #fff3d6; --text: #1b120b; --quiet: #382618; --accent: #701010; --line: #59412c; --hero-shade: #160d06eb; }
 :root.high-contrast[data-theme="night"] { --surface: #17120d; --text: #fff3d6; --quiet: #f0ddb4; --accent: #ffd38c; --line: #c9a96e; }
@@ -46,7 +48,10 @@ h3 { font: 400 1.65rem/1.2 var(--font-heading); }
 .container { width: min(var(--container), calc(100% - var(--gutter) * 2)); margin-inline: auto; }
 .section { padding-block: var(--section-space); position: relative; }
 .paper { background: var(--surface); color: var(--text); }
-.paper::before { content: ''; position: absolute; inset: 0; pointer-events: none; opacity: .2; mix-blend-mode: multiply; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E"); }
+/* Sand: soft lighter/darker drifts, coarse specks, then fine dark and light grains. All noise is isotropic (no stretched ripples, which read as stripes); one seamless 512px tile, normal blend so light grains still show on dusk paper. */
+.paper::before { content: ''; position: absolute; inset: 0; pointer-events: none; opacity: .6; background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%27512%27%20height%3D%27512%27%3E%3Cfilter%20id%3D%27m%27%20x%3D%270%27%20y%3D%270%27%20width%3D%27100%25%27%20height%3D%27100%25%27%3E%3CfeTurbulence%20type%3D%27fractalNoise%27%20baseFrequency%3D%27.007%27%20numOctaves%3D%273%27%20seed%3D%275%27%20stitchTiles%3D%27stitch%27%2F%3E%3CfeColorMatrix%20values%3D%270%200%200%200%20.4%20%200%200%200%200%20.28%20%200%200%200%200%20.15%20%202.6%200%200%200%20-1.2%27%2F%3E%3C%2Ffilter%3E%3Cfilter%20id%3D%27c%27%20x%3D%270%27%20y%3D%270%27%20width%3D%27100%25%27%20height%3D%27100%25%27%3E%3CfeTurbulence%20type%3D%27fractalNoise%27%20baseFrequency%3D%27.32%27%20numOctaves%3D%272%27%20seed%3D%274%27%20stitchTiles%3D%27stitch%27%2F%3E%3CfeColorMatrix%20values%3D%270%200%200%200%20.28%20%200%200%200%200%20.18%20%200%200%200%200%20.1%20%20-12%200%200%200%204.7%27%2F%3E%3C%2Ffilter%3E%3Cfilter%20id%3D%27d%27%20x%3D%270%27%20y%3D%270%27%20width%3D%27100%25%27%20height%3D%27100%25%27%3E%3CfeTurbulence%20type%3D%27fractalNoise%27%20baseFrequency%3D%27.95%27%20numOctaves%3D%272%27%20seed%3D%273%27%20stitchTiles%3D%27stitch%27%2F%3E%3CfeColorMatrix%20values%3D%270%200%200%200%20.3%20%200%200%200%200%20.2%20%200%200%200%200%20.11%20%20-14%200%200%200%205.6%27%2F%3E%3C%2Ffilter%3E%3Cfilter%20id%3D%27l%27%20x%3D%270%27%20y%3D%270%27%20width%3D%27100%25%27%20height%3D%27100%25%27%3E%3CfeTurbulence%20type%3D%27fractalNoise%27%20baseFrequency%3D%27.95%27%20numOctaves%3D%272%27%20seed%3D%279%27%20stitchTiles%3D%27stitch%27%2F%3E%3CfeColorMatrix%20values%3D%270%200%200%200%201%20%200%200%200%200%20.95%20%200%200%200%200%20.84%20%2014%200%200%200%20-8.6%27%2F%3E%3C%2Ffilter%3E%3Crect%20width%3D%27512%27%20height%3D%27512%27%20filter%3D%27url(%23m)%27%20opacity%3D%27.4%27%2F%3E%3Crect%20width%3D%27512%27%20height%3D%27512%27%20filter%3D%27url(%23c)%27%20opacity%3D%27.3%27%2F%3E%3Crect%20width%3D%27512%27%20height%3D%27512%27%20filter%3D%27url(%23d)%27%20opacity%3D%27.5%27%2F%3E%3Crect%20width%3D%27512%27%20height%3D%27512%27%20filter%3D%27url(%23l)%27%20opacity%3D%27.45%27%2F%3E%3C%2Fsvg%3E"); }
+/* Dusk sand: its own tile, since faded day sand reads as flat static on dark paper. Moonlit lighter drifts and deeper hollows, sparse coarse specks, dark grit, and a few dim pale grains. */
+:root[data-theme="night"] .paper:not(.telegram)::before { opacity: 1; background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%27512%27%20height%3D%27512%27%3E%3Cfilter%20id%3D%27a%27%20x%3D%270%27%20y%3D%270%27%20width%3D%27100%25%27%20height%3D%27100%25%27%3E%3CfeTurbulence%20type%3D%27fractalNoise%27%20baseFrequency%3D%27.006%27%20numOctaves%3D%273%27%20seed%3D%2712%27%20stitchTiles%3D%27stitch%27%2F%3E%3CfeColorMatrix%20values%3D%270%200%200%200%20.55%20%200%200%200%200%20.42%20%200%200%200%200%20.28%20%202.8%200%200%200%20-1.35%27%2F%3E%3C%2Ffilter%3E%3Cfilter%20id%3D%27b%27%20x%3D%270%27%20y%3D%270%27%20width%3D%27100%25%27%20height%3D%27100%25%27%3E%3CfeTurbulence%20type%3D%27fractalNoise%27%20baseFrequency%3D%27.009%27%20numOctaves%3D%273%27%20seed%3D%2721%27%20stitchTiles%3D%27stitch%27%2F%3E%3CfeColorMatrix%20values%3D%270%200%200%200%20.02%20%200%200%200%200%20.01%20%200%200%200%200%200%20%20-2.8%200%200%200%201.25%27%2F%3E%3C%2Ffilter%3E%3Cfilter%20id%3D%27c%27%20x%3D%270%27%20y%3D%270%27%20width%3D%27100%25%27%20height%3D%27100%25%27%3E%3CfeTurbulence%20type%3D%27fractalNoise%27%20baseFrequency%3D%27.3%27%20numOctaves%3D%272%27%20seed%3D%276%27%20stitchTiles%3D%27stitch%27%2F%3E%3CfeColorMatrix%20values%3D%270%200%200%200%20.62%20%200%200%200%200%20.48%20%200%200%200%200%20.32%20%2014%200%200%200%20-9.4%27%2F%3E%3C%2Ffilter%3E%3Cfilter%20id%3D%27d%27%20x%3D%270%27%20y%3D%270%27%20width%3D%27100%25%27%20height%3D%27100%25%27%3E%3CfeTurbulence%20type%3D%27fractalNoise%27%20baseFrequency%3D%27.9%27%20numOctaves%3D%272%27%20seed%3D%278%27%20stitchTiles%3D%27stitch%27%2F%3E%3CfeColorMatrix%20values%3D%270%200%200%200%200%20%200%200%200%200%200%20%200%200%200%200%200%20%20-12%200%200%200%204.9%27%2F%3E%3C%2Ffilter%3E%3Cfilter%20id%3D%27l%27%20x%3D%270%27%20y%3D%270%27%20width%3D%27100%25%27%20height%3D%27100%25%27%3E%3CfeTurbulence%20type%3D%27fractalNoise%27%20baseFrequency%3D%27.9%27%20numOctaves%3D%272%27%20seed%3D%2714%27%20stitchTiles%3D%27stitch%27%2F%3E%3CfeColorMatrix%20values%3D%270%200%200%200%20.85%20%200%200%200%200%20.72%20%200%200%200%200%20.55%20%2016%200%200%200%20-10.6%27%2F%3E%3C%2Ffilter%3E%3Crect%20width%3D%27512%27%20height%3D%27512%27%20filter%3D%27url(%23a)%27%20opacity%3D%27.16%27%2F%3E%3Crect%20width%3D%27512%27%20height%3D%27512%27%20filter%3D%27url(%23b)%27%20opacity%3D%27.35%27%2F%3E%3Crect%20width%3D%27512%27%20height%3D%27512%27%20filter%3D%27url(%23c)%27%20opacity%3D%27.12%27%2F%3E%3Crect%20width%3D%27512%27%20height%3D%27512%27%20filter%3D%27url(%23d)%27%20opacity%3D%27.35%27%2F%3E%3Crect%20width%3D%27512%27%20height%3D%27512%27%20filter%3D%27url(%23l)%27%20opacity%3D%27.22%27%2F%3E%3C%2Fsvg%3E"); }
 /* Warna pasir selang-seling agar tepi sobek antarbagian terlihat. */
 .paper.alt { --surface: #d9bf88; }
 :root[data-theme="night"] .paper.alt { --surface: #352a1f; }
@@ -61,21 +66,40 @@ h3 { font: 400 1.65rem/1.2 var(--font-heading); }
 .skip-link { position: fixed; z-index: 100; top: -100px; left: 1rem; padding: var(--space-sm); background: var(--parchment); color: var(--ink); }
 .skip-link:focus { top: 1rem; }
 .skip-link:focus-visible { outline-color: var(--parchment); }
-.site-header { position: absolute; inset: 0 0 auto; z-index: 20; color: var(--parchment); background: linear-gradient(var(--shadow), var(--clear)); transform-origin: top center; }
-.site-header.is-sticky { position: fixed; background: repeating-linear-gradient(2deg, var(--clear) 0 5px, var(--shadow) 6px 7px), var(--wood); box-shadow: 0 4px 16px var(--shadow); }
-.nav-shell { min-height: 100px; display: flex; align-items: center; gap: var(--space-xl); }
+/* One fixed nav: a weathered plank hung from the top edge on two ropes. Plank, ropes and eyelets sway together.
+   The timber is the inline SVG .plank (filter #plank-wood: uneven grain, rough edges, its own shadow); colours stay fixed in every theme. */
+.site-header { --rope: 30px; --eye: 96px; position: fixed; inset: 0 0 auto; z-index: 20; padding-top: var(--rope); color: var(--paper-light); pointer-events: none; }
+.nav-shell { position: relative; isolation: isolate; will-change: transform; min-height: 64px; display: flex; align-items: center; gap: var(--space-xl); padding: 6px var(--space-lg); pointer-events: auto; transform-origin: 50% calc(var(--rope) * -1);
+  /* Lettering burnt into the board: dark under-edge so it holds on the lightest grain. */
+  text-shadow: 0 1px 1px #000000b3, 0 0 6px #00000059; }
+.plank { position: absolute; z-index: -1; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.plank rect { width: 100%; height: 100%; }
+.plank-knots ellipse { fill: none; stroke: #120a05; stroke-width: 1.4; opacity: .55; } .plank-knots ellipse:last-child { fill: #120a05; }
+/* Twisted hemp running from well above the viewport (so a sway never shows its end) down into each hole, over an iron ring. */
+.nav-shell::before, .nav-shell::after { content: ''; position: absolute; left: 0; right: 0; pointer-events: none; }
+.nav-shell::before { top: calc(-1 * (var(--rope) + 120px)); height: calc(var(--rope) + 120px + 22px); background-repeat: no-repeat;
+  background-size: 8px calc(100% - 8px), 8px calc(100% - 8px), 8px calc(100% - 8px), 8px calc(100% - 8px), 18px 18px, 18px 18px;
+  background-position: left calc(var(--eye) - 4px) top, left calc(var(--eye) - 4px) top, right calc(var(--eye) - 4px) top, right calc(var(--eye) - 4px) top, left calc(var(--eye) - 9px) bottom -1px, right calc(var(--eye) - 9px) bottom -1px;
+  background-image: linear-gradient(90deg, #00000066, var(--clear) 35% 65%, #00000066), repeating-linear-gradient(-55deg, #e2c189 0 3px, #a8814a 3px 5px, #6e4f2a 5px 6px), linear-gradient(90deg, #00000066, var(--clear) 35% 65%, #00000066), repeating-linear-gradient(-55deg, #e2c189 0 3px, #a8814a 3px 5px, #6e4f2a 5px 6px),
+    radial-gradient(circle, #0d0805 0 4px, #8d8070 4.5px 5.5px, #3c342b 6.5px 7.5px, #0d080580 8px, var(--clear) 9px), radial-gradient(circle, #0d0805 0 4px, #8d8070 4.5px 5.5px, #3c342b 6.5px 7.5px, #0d080580 8px, var(--clear) 9px); }
+/* The dark of the hole drawn over the rope's end, so the rope disappears into the wood. */
+.nav-shell::after { top: 0; height: 28px; background: radial-gradient(ellipse 4px 3px at left var(--eye) top 14px, #0d0805 0 70%, var(--clear) 100%), radial-gradient(ellipse 4px 3px at right var(--eye) top 14px, #0d0805 0 70%, var(--clear) 100%); }
+.high-contrast .nav-shell { text-shadow: none; background: var(--night); outline: 2px solid var(--paper-light); } .high-contrast .plank { display: none; }
+.high-contrast .brand circle { fill: var(--night); } .high-contrast nav a:is(:hover, [aria-current]) { text-decoration-color: currentColor; } .high-contrast .brand svg { filter: none; }
 .brand { display: flex; gap: var(--space-sm); align-items: center; text-decoration: none; font: 400 1.2rem/1.1 var(--font-heading); flex-shrink: 0; }
-.brand svg { width: 39px; height: 39px; fill: var(--parchment); }
-.brand circle { fill: var(--wood); }
+.brand svg { width: 39px; height: 39px; fill: currentColor; filter: drop-shadow(0 1px 1px #000000b3); }
+.brand circle { fill: #4a3220; }
 .brand span span { display: block; font: .75rem/1.5 var(--font-label); }
 #brand { max-width: 150px; }
 nav { display: flex; justify-content: center; gap: var(--space-lg); margin-left: auto; }
 nav a { font-size: 1rem; text-decoration: none; padding-block: var(--space-sm); white-space: nowrap; }
-nav a:hover, nav a[aria-current] { color: var(--paper-light); text-decoration: underline; text-decoration-thickness: 2px; }
+nav a:hover, nav a[aria-current] { text-decoration: underline; text-decoration-color: #efb365; text-decoration-thickness: 3px; text-underline-offset: 6px; }
 .tools { display: flex; align-items: center; gap: var(--space-xs); }
 #menu-toggle { display: none; }
 .tool { min-height: 44px; padding: var(--space-xs) var(--space-sm); background: var(--clear); border: 1px solid currentColor; color: inherit; font: .75rem/1.3 var(--font-label); }
 .tool:hover { background: var(--shadow); }
+/* On the plank the ink stays dark, so hover only stains the wood lightly instead of the dark wash. */
+.nav-shell .tool:hover { background: #f0e1bc24; } .high-contrast .nav-shell .tool:hover { background: #fff3d61f; }
 .tool.accessibility-trigger, .tool.icon-tool { display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; padding: 4px; border: 0; border-radius: 50%; }
 .accessibility-trigger svg { width: 36px; height: 36px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
 .accessibility-trigger .accessibility-ring { stroke-width: 2.8; }
@@ -130,7 +154,7 @@ nav a:hover, nav a[aria-current] { color: var(--paper-light); text-decoration: u
 html.dialog-open { overflow-y: hidden; }
 .high-contrast .grain, .high-contrast .vignette, .high-contrast #dust, .high-contrast #cursor, .high-contrast .paper::before { display: none; }
 .high-contrast .map-section { background-image: none; }
-.high-contrast .wood, .high-contrast .site-header { background: var(--night); color: var(--paper-light); }
+.high-contrast .wood { background: var(--night); color: var(--paper-light); }
 .high-contrast .hero-content { text-shadow: none; }
 .high-contrast a:not(.brand):not(.button) { text-decoration: underline; }
 .large-text .hero { height: auto; max-height: none; padding-top: calc(var(--nav-offset, 7rem) + 1rem); padding-bottom: 7rem; }
@@ -145,6 +169,8 @@ html.dialog-open { overflow-y: hidden; }
 /* Dusk mode: a few fixed stars above the mesas. */
 :root[data-theme="night"] .sun-layer::before { content: ''; position: absolute; inset: 0 0 45%; opacity: .75; background-size: 340px 260px; background-image: radial-gradient(circle at 30px 40px, var(--paper-light) 1.2px, var(--clear) 2px), radial-gradient(circle at 120px 150px, var(--paper-light) 1px, var(--clear) 1.8px), radial-gradient(circle at 200px 70px, var(--paper-light) 1.5px, var(--clear) 2.4px), radial-gradient(circle at 280px 200px, var(--paper-light) .8px, var(--clear) 1.6px), radial-gradient(circle at 310px 20px, var(--paper-light) 1px, var(--clear) 1.8px), radial-gradient(circle at 70px 230px, var(--paper-light) .8px, var(--clear) 1.6px); }
 .sun { width: clamp(260px, 33vw, 480px); aspect-ratio: 1; border-radius: 50%; background: var(--sun); position: absolute; top: 17%; left: 50%; transform: translateX(-50%); opacity: .8; }
+/* Dusk: the same disc becomes a crescent moon. A mask cuts the shadowed side so it scales with the disc; rotate/mask leave transform free for the sun-set drift, and the parallax/mouse layers live on .sun-layer. */
+:root[data-theme="night"] .sun { width: clamp(150px, 19vw, 270px); top: 15%; opacity: 1; background: radial-gradient(circle at 30% 70%, #fffbef, #f1e6cc 70%, #e2d3b0); rotate: -18deg; -webkit-mask: radial-gradient(circle at 68% 38%, transparent 0 41%, #000 41.5%); mask: radial-gradient(circle at 68% 38%, transparent 0 41%, #000 41.5%); }
 .scene { position: absolute; bottom: -2%; left: -3%; width: 106%; height: 100%; }
 .far { fill: var(--mesa-far); translate: calc(var(--mouse-x, 0px) * .5) calc(var(--mouse-y, 0px) * .5); }.middle { fill: var(--mesa-mid); translate: var(--mouse-x, 0px) var(--mouse-y, 0px); }.near { fill: var(--mesa-near); }
 .birds { position: absolute; top: 27%; left: 72%; width: 120px; fill: none; stroke: var(--ink); stroke-width: 2; }
@@ -194,7 +220,13 @@ figcaption { text-align: center; font: .8rem/1.5 var(--font-label); margin-top: 
 .journal-copy p { margin-bottom: var(--space-lg); }
 .journal-copy #about-copy p:first-child::first-letter { float: left; font: 3.4rem/1 var(--font-heading); padding-right: var(--space-xs); color: var(--accent); }
 .education-layout { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: var(--space-2xl); align-items: center; }
-.campus { margin: 0; }
+/* The campus is pinned to a blank, weathered bounty sheet: inline SVG .bounty (filter #bounty-paper: torn edge, darker aged rim, stains, fibres, own shadow) with an iron nail. Paper colours stay fixed in every theme. */
+/* The sheet stretches to the Education board height; the model stays centred on it. */
+.campus { position: relative; isolation: isolate; align-self: stretch; display: flex; flex-direction: column; justify-content: center; margin: 0; padding: 3.25rem 2.25rem 1.75rem; color: var(--ink); color-scheme: light; }
+.bounty { position: absolute; z-index: -1; inset: 0; width: 100%; height: 100%; overflow: visible; rotate: -1.2deg; }
+.bounty > rect { width: 100%; height: 100%; }
+.campus figcaption { margin-top: var(--space-sm); color: var(--ink); }
+.high-contrast .bounty > rect { filter: none; fill: #fff3d6; stroke: var(--ink); stroke-width: 2; }
 /* Still and viewer share one 4/3 box, so swapping them never shifts the layout. */
 .campus-stage { position: relative; aspect-ratio: 4/3; }
 .campus-stage > * { position: absolute; inset: 0; width: 100%; height: 100%; }
@@ -226,26 +258,35 @@ figcaption { text-align: center; font: .8rem/1.5 var(--font-label); margin-top: 
 #credentials dd { margin: 0; color: var(--text); }
 #credentials ul { margin: 0; padding-left: 1.1em; }
 #credentials p { margin-bottom: var(--space-xs); }
-.ledger-layout { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: var(--space-2xl); }
-.ledger-layout h2 { margin-bottom: var(--space-lg); }
-.ledger-seal { width: 145px; height: 145px; display: grid; align-content: center; text-align: center; border: 3px double var(--accent); border-radius: 50%; color: var(--accent); font: 1.2rem/1.3 var(--font-heading); transform: rotate(-15deg); margin-top: var(--space-xl); opacity: .8; }
-.ledger { border-top: 4px double var(--text); border-bottom: 4px double var(--text); padding: var(--space-md) 0; align-self: start; }
-.ledger-head { display: flex; justify-content: space-between; font: .85rem/1.5 var(--font-label); border-bottom: 1px solid var(--line); padding-bottom: var(--space-md); }
-.skill-row { padding-block: var(--space-lg); border-bottom: 1px solid var(--line); }
-.skill-label { display: flex; justify-content: space-between; gap: var(--space-md); }
-.skill-label span:last-child { font: .95rem/1.5 var(--font-label); }
-.skill-label span { min-width: 0; }
-.skill-label span:last-child { text-align: right; }
-.skill-row small { display: block; color: var(--quiet); font-size: .9rem; }
-.ink-track { height: 5px; margin-top: var(--space-sm); background: color-mix(in srgb, var(--text) 15%, var(--clear)); }
-.ink-fill { height: 100%; background: var(--accent); transform-origin: left; }
+/* Gear & Skills: heading board + seal, then a grid of category boards (6 columns: a third = 2, wide = 4, half = 3). */
+.skills-head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2xl); margin-bottom: var(--space-2xl); }
+.skills-head .plate { max-width: 40rem; }
+.skills-head h2 { margin-bottom: var(--space-md); }
+.ledger-seal { flex-shrink: 0; width: 145px; height: 145px; display: grid; align-content: center; text-align: center; border: 3px double var(--accent); border-radius: 50%; color: var(--accent); font: 1.2rem/1.3 var(--font-heading); transform: rotate(-15deg); margin-top: var(--space-xl); opacity: .8; }
+.skill-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--space-lg); }
+.skill-card { grid-column: span 2; display: flex; flex-direction: column; padding: var(--space-xl) var(--space-lg) var(--space-lg); }
+.skill-card.is-wide { grid-column: span 4; } .skill-card.is-half { grid-column: span 3; }
+.skill-card h3 { margin-bottom: var(--space-xs); }
+.skill-card > p { margin-bottom: var(--space-lg); color: var(--quiet); font-size: 1rem; line-height: 1.5; }
+.tool-chips, .skill-tags { display: flex; flex-wrap: wrap; gap: var(--space-sm); margin: 0; padding: 0; list-style: none; }
+/* Tool chip: a small parchment tag tacked to the board; the real logo sits straight on the parchment. */
+.tool-chip { display: flex; align-items: center; gap: var(--space-sm); min-height: 46px; padding: 5px var(--space-md) 5px 5px; color: var(--ink); text-shadow: none; font: 1rem/1.2 var(--font-body); border: 1px solid #2b1d1299; border-radius: 3px; box-shadow: 0 3px 6px #140c0759;
+  background: radial-gradient(circle at 50% 3px, #3a2a1c 0 1.5px, var(--clear) 2px), linear-gradient(#f2e3bf, #e3cc9a); }
+.tool-icon { display: grid; place-items: center; width: 30px; height: 34px; flex-shrink: 0; }
+.tool-icon img { width: 24px; height: 24px; }
+.skill-card .tool-chips + .skill-tags { margin-top: var(--space-lg); padding-top: var(--space-md); border-top: 1px dashed var(--line); }
+/* Concept tags: no logo, stamped lettering on the wood. */
+.skill-tags li { display: inline-flex; align-items: center; gap: 7px; min-height: 32px; padding: 3px var(--space-sm); font: .85rem/1.3 var(--font-label); color: var(--text); border: 1px solid var(--line); border-radius: 3px; background: #00000026; }
+.skill-tags li:not(.has-flag)::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
+/* Language flags: a tiny cloth swatch with a hairline edge so the white field holds on the wood. */
+.skill-tags .flag { width: 22px; height: 14px; border-radius: 1px; box-shadow: 0 0 0 1px #00000059, 0 1px 2px #00000066; }
+.high-contrast .tool-chip { background: #fff3d6; border-color: var(--ink); box-shadow: none; } .high-contrast .skill-tags li { background: none; }
 .note { font: .8rem/1.6 var(--font-label); margin-top: var(--space-md); }
 /* Papan kayu di belakang teks: warna tetap di semua tema agar kontras terjaga. */
 .plate { --text: var(--paper-light); --quiet: #dcc699; --accent: #efb365; --line: #a08058; position: relative; padding: var(--space-xl); color: var(--text); border: 2px solid var(--ink); border-radius: 3px; box-shadow: 0 8px 18px var(--shadow), inset 0 0 0 1px #ffffff1a;
   background: radial-gradient(circle at 14px 14px, #1a110a 0 3px, var(--clear) 4px), radial-gradient(circle at calc(100% - 14px) 14px, #1a110a 0 3px, var(--clear) 4px), radial-gradient(circle at 14px calc(100% - 14px), #1a110a 0 3px, var(--clear) 4px), radial-gradient(circle at calc(100% - 14px) calc(100% - 14px), #1a110a 0 3px, var(--clear) 4px), repeating-linear-gradient(0deg, var(--clear) 0 62px, #00000055 63px 65px), repeating-linear-gradient(1deg, var(--clear) 0 6px, #0000001f 7px 8px), #5b3b23; }
 .plate > :last-child { margin-bottom: 0; }
 .plate h2 { font-size: clamp(2rem, 3vw, 2.6rem); }
-.ledger-layout .plate h2 { margin-bottom: var(--space-lg); }
 .high-contrast .plate { background: var(--night); border-color: var(--paper-light); --text: #fff3d6; --quiet: #f0ddb4; --accent: #ffd38c; --line: #c9a96e; }
 .wood { color: var(--parchment); background: repeating-linear-gradient(0deg, var(--clear) 0 80px, var(--shadow) 81px 84px), repeating-linear-gradient(2deg, var(--clear) 0 8px, var(--shadow) 9px 10px), var(--wood); }
 .board-heading { display: flex; justify-content: space-between; gap: var(--space-xl); align-items: center; margin-bottom: var(--space-2xl); }
@@ -300,14 +341,38 @@ figcaption { text-align: center; font: .8rem/1.5 var(--font-label); margin-top: 
 .journey-stop time { font: .9rem/1.6 var(--font-label); color: var(--accent); }
 .journey-stop h3 { margin-block: var(--space-sm); }
 .journey-stop p { margin: 0; }.company { color: var(--quiet); font-style: italic; }
-.contact-section { background: var(--night); color: var(--parchment); padding-block: var(--space-4xl); }
-.contact-layout { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); gap: var(--space-2xl); align-items: center; }.contact-copy h2 { font-size: clamp(2.5rem, 5vw, 4.2rem); margin-bottom: var(--space-lg); }
+/* Contact: an underground mine drift (inline SVG .mine, one-point perspective). By day the lantern is out and daylight comes from the far end; at dusk the far end is night and the lantern is lit. Scene colours stay dark in both themes so the cream text reads. */
+.contact-section { position: relative; isolation: isolate; background: #120d09; color: var(--parchment); padding-block: var(--space-4xl); }
+/* The drift runs on under the footer (JS sets --footer-h), so the rails reach the bottom of the page. */
+.mine { position: absolute; z-index: -1; inset: 0 0 calc(-1 * var(--footer-h, 0px)); width: 100%; height: calc(100% + var(--footer-h, 0px)); }
+.mine-exit { fill: #f6e3b0; transition: fill .6s; }
+.mine-rail-web { fill: #2e2924; stroke: #0b0806; stroke-width: 1; } .mine-rail { fill: #8a8178; } .mine-rail-shine { stroke: #d8cfc2; stroke-opacity: .55; stroke-width: 1.4; }
+.mine-fog-night { opacity: 0; } .mine-fog-day, .mine-fog-night { transition: opacity .6s; }
+:root[data-theme="night"] .mine-fog-day { opacity: 0; } :root[data-theme="night"] .mine-fog-night { opacity: 1; }
+/* Stacked rocks along the top edge: the sand above ends on a rubble ledge instead of a straight cut. */
+.mine-ledge { position: absolute; z-index: 0; top: -58px; left: 0; width: 100%; height: 110px; pointer-events: none; }
+.mine-daylight, .mine-lamplight, .lantern-halo, .lantern-fire { transition: opacity .6s; }
+.mine-lamplight, .lantern-halo, .lantern-fire { opacity: 0; }
+.lantern-glass { fill: url(#mine-glass-off); stroke: #120c08; stroke-width: 2; }
+.lantern-flame { fill: #ffb547; } .lantern-flame-core { fill: #fff4cf; }
+:root[data-theme="night"] .mine-exit { fill: #0c0f18; }
+:root[data-theme="night"] .mine-daylight { opacity: 0; }
+:root[data-theme="night"] :is(.mine-lamplight, .lantern-halo, .lantern-fire) { opacity: 1; }
+:root[data-theme="night"] .lantern-glass { fill: url(#mine-glass-on); }
+.high-contrast :is(.mine, .mine-ledge) { display: none; }
+/* Text on the left wall, the form pinned on the right; the middle column stays open for the lantern and the far end of the drift. */
+.contact-layout { display: grid; grid-template-columns: minmax(0, 1fr) clamp(120px, 15vw, 230px) minmax(0, 1fr); align-items: center; }
+/* A soft pool of shadow behind the copy so the receding timbers never cross the lettering at full strength. */
+.contact-copy { grid-column: 1; position: relative; text-shadow: 0 2px 10px #000000b3; }
+.contact-copy::before { content: ''; position: absolute; z-index: -1; inset: -3rem -4rem; background: radial-gradient(closest-side, #0d0906d9, #0d090699 55%, #0d090600); pointer-events: none; } .contact-layout > .telegram { grid-column: 3; }.contact-copy h2 { font-size: clamp(2.5rem, 5vw, 4.2rem); margin-bottom: var(--space-lg); }
 .social-links { display: flex; flex-wrap: wrap; gap: var(--space-sm); margin-top: var(--space-xl); }
 .social-links a { width: 52px; height: 52px; display: inline-flex; align-items: center; justify-content: center; border: 2px solid var(--parchment-dark); border-radius: 50%; color: var(--parchment); transition: background .2s, color .2s, transform .2s; }
 .social-links svg { width: 24px; height: 24px; }
 .social-links a:hover, .social-links a:focus-visible { background: var(--parchment); color: var(--wood); transform: translateY(-2px); }
 .social-links a:focus-visible { outline-color: var(--parchment); }
-.telegram { position: relative; padding: var(--space-xl); transform: rotate(1deg); --surface: var(--parchment); --text: var(--ink); color-scheme: light; }
+.telegram { position: relative; padding: var(--space-xl); transform: rotate(1deg); --surface: var(--parchment); --text: var(--ink); color-scheme: light; box-shadow: 0 18px 30px #000000a6; }
+/* The nail it hangs from. */
+.telegram::after { content: ''; position: absolute; top: 10px; left: 50%; width: 14px; height: 14px; margin-left: -7px; border-radius: 50%; background: radial-gradient(circle at 38% 34%, #b9b2a6, #5d564d 45%, #1d1915); box-shadow: 2px 3px 3px #00000080; }
 /* The cream button label would give a cream ring on cream paper. */
 .telegram :focus-visible { outline-color: var(--ink); }
 .telegram-heading, .telegram-foot { display: flex; justify-content: space-between; gap: var(--space-md); border-block: 3px double var(--ink); padding-block: var(--space-sm); font: .8rem/1.5 var(--font-label); }
@@ -322,7 +387,12 @@ input { height: 50px; padding-block: var(--space-xs); }
 input[aria-invalid="true"], textarea[aria-invalid="true"] { outline: 2px solid var(--blood-red); }
 #form-status { min-height: 3em; font: .85rem/1.5 var(--font-label); margin: var(--space-lg) 0 0; }
 .honeypot { display: none; }
-.site-footer { background: var(--night); color: var(--parchment-dark); padding: 0 0 var(--space-xl); }
+.site-footer { position: relative; z-index: 1; isolation: isolate; background: var(--night); color: var(--parchment-dark); padding: 0 0 var(--space-xl); }
+/* End of the line: the footer is the floor of the drift, with rock fall piled in both corners. */
+.js:not(.high-contrast) .site-footer { background: linear-gradient(#0d090600, #0d0906a6 40%, #0d0906e6); }
+.rubble { position: absolute; z-index: -1; bottom: 0; width: clamp(120px, calc((100vw - var(--container)) / 2 + 40px), 420px); height: auto; aspect-ratio: 420 / 240; pointer-events: none; }
+.rubble-left { left: 0; } .rubble-right { right: 0; scale: -1 1; }
+.high-contrast .rubble { display: none; }
 .farewell { font: 2rem/1.3 var(--font-heading); margin-bottom: var(--space-xl); }
 .footer-bottom { display: flex; justify-content: space-between; flex-wrap: wrap; gap: var(--space-lg); border-top: 1px solid var(--wood); padding-top: var(--space-lg); font: .75rem/1.6 var(--font-label); }
 .footer-bottom a { min-height: 44px; }
@@ -333,22 +403,32 @@ input[aria-invalid="true"], textarea[aria-invalid="true"] { outline: 2px solid v
   .brand { font-size: 1rem; } .brand svg { width: 30px; }
   .tool.accessibility-trigger, .tool.icon-tool { width: 44px; height: 44px; } .accessibility-trigger svg { width: 34px; height: 34px; }
   .poster-grid { gap: var(--space-lg); }
+  .skill-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .skill-card, .skill-card.is-half { grid-column: span 1; } .skill-card.is-wide { grid-column: span 2; }
 }
 @media (max-width: 800px) {
-  .nav-shell { min-height: 85px; flex-wrap: wrap; padding-block: var(--space-sm); gap: var(--space-sm); }
+  /* Ropes move out to the plank ends so the eyelets clear the star and the tools. */
+  .site-header { --rope: 18px; --eye: 11px; }
+  .plank-knots svg:first-child { display: none; }
+  .nav-shell { min-height: 56px; flex-wrap: wrap; padding: 4px 22px; gap: var(--space-sm); }
   #menu-toggle { display: block; margin-left: auto; }
   nav { order: 4; width: 100%; margin: 0; justify-content: space-between; flex-wrap: wrap; }
   .js nav:not(.is-open) { display: none; }
   .hero { height: 780px; min-height: 700px; }
   .hero-foot { font-size: .95rem; } .board { padding-inline: var(--space-sm); } .sign:nth-child(2) .board { padding-inline: var(--space-md); }
-  .journal, .education-layout, .ledger-layout, .contact-layout { grid-template-columns: minmax(0, 1fr); gap: var(--space-xl); }
+  .journal, .education-layout, .contact-layout { grid-template-columns: minmax(0, 1fr); gap: var(--space-xl); }
+  .contact-copy, .contact-layout > .telegram { grid-column: auto; }
   .portrait { max-width: 320px; margin: 0 auto var(--space-lg); }
-  .journal-copy h2 br, .ledger-layout h2 br { display: none; }
+  .journal-copy h2 br { display: none; }
   .ledger-seal { display: none; }
+  .skill-grid { grid-template-columns: minmax(0, 1fr); } .skill-card, .skill-card.is-wide, .skill-card.is-half { grid-column: auto; }
   .poster-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-xl); }
   .poster-grid > :last-child:nth-child(odd) { grid-column: 1/-1; width: min(100%, 350px); justify-self: center; }
   .board-heading, .map-heading { display: block; }.board-heading h2, .map-heading h2 { margin-bottom: var(--space-lg); }
-  .contact-section { padding-block: var(--section-space); }
+  /* Narrow screens: the drift is drawn at a fixed height at the top and fades into the rock, so the lantern stays above the copy whatever the section height. */
+  .contact-section { padding-block: 14rem var(--section-space); }
+  .js:not(.high-contrast) .site-footer { background: var(--night); }
+  .mine-ledge { top: -40px; width: 143%; transform: scale(.7); transform-origin: 0 0; }
+  .mine { inset: 0 0 auto; height: 640px; -webkit-mask: linear-gradient(#000 70%, transparent); mask: linear-gradient(#000 70%, transparent); }
   .contact-copy h2 br { display: block; }
 }
 @media (max-width: 520px) {

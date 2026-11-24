@@ -62,11 +62,12 @@ function render() {
   $('#credentials').innerHTML = `<h3>${escapeHTML(edu.school)}</h3><div class="degree-row"><p class="degree">${escapeHTML(edu.degree)}<br><span class="period">${escapeHTML(edu.period)}</span></p>${edu.semester ? `<span class="semester-stamp" role="img" aria-label="${escapeHTML(edu.semester)}"><i aria-hidden="true">✦</i><small aria-hidden="true">Semester</small><b aria-hidden="true">${escapeHTML(edu.semester.replace(/\D+/g, ''))}</b></span>` : ''}</div><dl><div><dt>GPA</dt><dd class="gpa">${escapeHTML(edu.gpa)}</dd></div><div><dt>Areas of interest</dt><dd><ul>${edu.interests.map((item) => `<li>${escapeHTML(item)}</li>`).join('')}</ul></dd></div></dl>${data.certificates.map((item) => `<p>${escapeHTML(item)}</p>`).join('')}`;
   const cvURL = safeURL(data.cv, 'asset');
   if (cvURL) { $('#cv-link').href = cvURL; $('#cv-link').hidden = false; }
+  // Satu papan per kategori: chip alat ber-logo, lalu tag konsep tanpa logo.
   $('#skill-list').innerHTML = data.skills.map((skill) => {
-    const numeric = typeof skill.level === 'number' && Number.isFinite(skill.level);
-    const level = numeric ? Math.max(0, Math.min(100, skill.level)) : String(skill.level);
-    const meter = numeric ? `<div class="ink-track" role="meter" aria-label="${escapeHTML(skill.name)}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${level}"><div class="ink-fill" style="width:${level}%"></div></div>` : '';
-    return `<div class="skill-row"><div class="skill-label"><span>${escapeHTML(skill.name)}</span><span>${escapeHTML(level)}${numeric ? '%' : ''}</span></div><small>${escapeHTML(skill.detail)}</small>${meter}</div>`;
+    const size = ['wide', 'half'].includes(skill.size) ? ` is-${skill.size}` : '';
+    const tools = (skill.tools || []).map((tool) => `<li class="tool-chip"><span class="tool-icon"><img src="assets/icons/skills/${encodeURIComponent(tool.icon)}.svg" alt="" width="24" height="24" loading="lazy" decoding="async"></span>${escapeHTML(tool.name)}</li>`).join('');
+    const tags = (skill.tags || []).map((tag) => tag.flag ? `<li class="has-flag"><img class="flag" src="assets/icons/flags/${encodeURIComponent(tag.flag)}.svg" alt="" width="22" height="14">${escapeHTML(tag.name)}</li>` : `<li>${escapeHTML(tag)}</li>`).join('');
+    return `<article class="skill-card plate reveal${size}"><h3>${escapeHTML(skill.name)}</h3><p>${escapeHTML(skill.detail)}</p>${tools ? `<ul class="tool-chips">${tools}</ul>` : ''}${tags ? `<ul class="skill-tags">${tags}</ul>` : ''}</article>`;
   }).join('') || '<p>The inventory is being prepared.</p>';
   $('#project-list').innerHTML = data.projects.map((project, index) => `<article class="poster reveal" style="--rotation:${[-2, 1.5, -1, 2][index % 4]}deg">
     <div class="poster-inner">
@@ -120,9 +121,13 @@ function setupMotion() {
     document.querySelectorAll('.reveal').forEach((element, index) => {
       gsap.from(element, { y: 24, opacity: 0, duration, delay: (index % 3) * .06, ease: 'power2.out', scrollTrigger: { trigger: element, start: 'top 94%', once: true } });
     });
-    document.querySelectorAll('.ink-fill').forEach((element) => gsap.from(element, { scaleX: 0, duration: duration * 1.5, ease: 'power2.out', scrollTrigger: { trigger: element, start: 'top 95%', once: true } }));
-    gsap.to('.far', { yPercent: 12, ease: 'none', scrollTrigger: { trigger: '#home', start: 'top top', end: 'bottom top', scrub: 1 } });
-    gsap.to('.middle', { yPercent: 7, ease: 'none', scrollTrigger: { trigger: '#home', start: 'top top', end: 'bottom top', scrub: 1 } });
+    // Parallax hero: makin jauh lapisannya, makin lambat ikut scroll (turun relatif ke halaman). Tanah dekat & papan petunjuk ikut halaman (0).
+    const hero = $('#home'), heroScroll = { trigger: hero, start: 'top top', end: 'bottom top', scrub: 1, invalidateOnRefresh: true };
+    for (const [layer, depth] of [['.sun-layer', .5], ['.far', .32], ['.middle', .18], ['.near', .06]]) {
+      gsap.to(layer, { y: () => hero.offsetHeight * depth, ease: 'none', scrollTrigger: { ...heroScroll } });
+    }
+    // Nama bergerak lebih cepat dari halaman dan memudar, jadi hero terasa ditinggalkan.
+    gsap.to('.hero-content', { y: () => hero.offsetHeight * -.12, opacity: .15, ease: 'none', scrollTrigger: { ...heroScroll } });
     const path = $('#route-line'), length = path.getTotalLength();
     gsap.fromTo(path, { strokeDasharray: length, strokeDashoffset: length }, { strokeDashoffset: 0, ease: 'none', scrollTrigger: { trigger: '.route-layout', start: 'top 70%', end: 'bottom 65%', scrub: .6 } });
     document.querySelectorAll('.marker').forEach((marker) => gsap.from(marker, { scale: 0, duration, ease: 'back.out(1.4)', scrollTrigger: { trigger: marker, start: 'top 85%', once: true } }));
@@ -167,8 +172,13 @@ function navigation() {
   document.querySelectorAll('main section[id]').forEach((section) => observer.observe(section));
   new IntersectionObserver(([entry]) => {
     root.classList.toggle('hero-offscreen', !entry.isIntersecting);
-    $('.site-header').classList.toggle('is-sticky', !entry.isIntersecting);
   }).observe($('#home'));
+  // Papan bergoyang saat tiba dan tiap kali scroll dimulai lagi setelah diam; CSS hanya menganimasikannya bila .motion-on.
+  const plank = $('.nav-shell'); let idle;
+  const swing = () => { if (!plank.classList.contains('is-swinging')) plank.classList.add('is-swinging'); };
+  plank.addEventListener('animationend', () => plank.classList.remove('is-swinging'));
+  addEventListener('scroll', () => { if (!idle) swing(); clearTimeout(idle); idle = setTimeout(() => { idle = 0; }, 400); }, { passive: true });
+  swing();
 }
 
 function posters() {
@@ -207,12 +217,13 @@ function posters() {
     const { clientX, clientY } = event;
     frame = requestAnimationFrame(() => {
       const x = (clientX / innerWidth - .5) * 14, y = (clientY / innerHeight - .5) * 8;
-      $('.sun-layer').style.transform = `translate(${x}px, ${y}px)`;
+      // translate, bukan transform: transform milik parallax scroll GSAP, menimpanya membuat matahari loncat ke atas.
+      $('.sun-layer').style.translate = `${x}px ${y}px`;
       $('.landscape').style.setProperty('--mouse-x', `${-x}px`);
       $('.landscape').style.setProperty('--mouse-y', `${-y}px`); frame = 0;
     });
   });
-  $('#home').addEventListener('pointerleave', () => { cancelAnimationFrame(frame); frame = 0; $('.sun-layer').style.transform = ''; $('.landscape').style.removeProperty('--mouse-x'); $('.landscape').style.removeProperty('--mouse-y'); });
+  $('#home').addEventListener('pointerleave', () => { cancelAnimationFrame(frame); frame = 0; $('.sun-layer').style.translate = ''; $('.landscape').style.removeProperty('--mouse-x'); $('.landscape').style.removeProperty('--mouse-y'); });
 }
 
 function theme() {
@@ -472,6 +483,8 @@ function contactForm() {
 render();
 root.classList.add('js');
 const applyTheme = theme();
+// Lorong tambang di Contact menerus ke bawah footer: CSS butuh tinggi footer.
+new ResizeObserver(([entry]) => root.style.setProperty('--footer-h', `${entry.target.offsetHeight}px`)).observe($('.site-footer'));
 navigation(); posters(); contactForm(); campus(); quickFind();
 accessibility(applyTheme, audio());
 reduced.addEventListener('change', setupMotion);

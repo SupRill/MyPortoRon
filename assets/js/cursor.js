@@ -4,9 +4,10 @@ export function startCursor(cursor) {
   let x = -100, y = -100, targetX = x, targetY = y, frame = 0, scale = 1, targetScale = 1;
   const holes = new Set();
   function draw() {
-    x += (targetX - x) * .24; y += (targetY - y) * .24; scale += (targetScale - scale) * .2;
+    // Posisi langsung menempel ke mouse (tanpa easing, yang membuatnya tertinggal saat mouse cepat); hanya zoom di atas tautan yang dihaluskan.
+    x = targetX; y = targetY; scale += (targetScale - scale) * .2;
     cursor.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
-    if (Math.abs(targetX - x) + Math.abs(targetY - y) + Math.abs(targetScale - scale) > .05) frame = requestAnimationFrame(draw);
+    if (Math.abs(targetScale - scale) > .01) frame = requestAnimationFrame(draw);
     else frame = 0;
   }
   function move(event) {
@@ -25,12 +26,14 @@ export function startCursor(cursor) {
     document.body.append(hole); holes.add(hole);
     setTimeout(() => { hole.remove(); holes.delete(hole); }, 700);
   }
+  // Kursor asli disembunyikan hanya selama crosshair ini hidup; cleanup mengembalikannya.
+  document.documentElement.classList.add('custom-cursor');
   document.addEventListener('pointermove', move, { passive: true });
   document.documentElement.addEventListener('pointerleave', hide);
   document.addEventListener('click', click);
   window.addEventListener('blur', hide);
   return () => {
-    hide(); holes.forEach((hole) => hole.remove()); holes.clear();
+    hide(); holes.forEach((hole) => hole.remove()); holes.clear(); document.documentElement.classList.remove('custom-cursor');
     document.removeEventListener('pointermove', move);
     document.documentElement.removeEventListener('pointerleave', hide);
     document.removeEventListener('click', click);
