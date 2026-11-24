@@ -2,7 +2,7 @@
 
 The personal portfolio of **Alfonsus Ronaldy Hidayat**, an Information Systems student at Universitas Multimedia Nusantara (UMN), Jakarta. Its interests are data analytics, database management, data engineering and self-hosting.
 
-The site is a late-1800s frontier bounty board: wooden signs and plates, parchment paper, and a desert sky that turns from dawn to dusk. It is plain HTML, CSS and JavaScript ES modules, with no build step and no dependencies to install.
+The site is a late-1800s frontier trail: wooden signs and plates, sand and parchment, a desert sky that turns from dawn to dusk, and an old mine at the end of the road. It is plain HTML, CSS and JavaScript ES modules, with no build step and no dependencies to install.
 
 ![The hero: the name in Western lettering over a desert sunset, with three wooden trail signs](assets/img/preview.png)
 
@@ -21,7 +21,8 @@ The site is a late-1800s frontier bounty board: wooden signs and plates, parchme
 
 - **3D campus model.** A Blender model of the UMN campus, rendered with Google's `<model-viewer>`. The mesh is Draco-compressed to about 229 KB (from 2.36 MB). Every device first shows a small still image. Desktops with WebGL then load the viewer when the section approaches. Phones, touch screens, data-saver connections and browsers without WebGL keep the still and offer a **Load the 3D campus** button, so nothing heavy downloads unless the visitor asks.
 - **Sheriff's Quick-Find.** Opened with the header magnifier, `Ctrl`/`Cmd`+`K` or `/`. It filters sections, projects and contact links; arrow keys move, `Enter` goes, `Esc` closes. Choosing a project scrolls to its poster and flips it.
-- **Dawn and dusk.** A sun/lantern button in the header switches the theme. With no saved choice it follows the device's light or dark setting.
+- **Dawn and dusk.** A sun/lantern button in the header switches the theme. With no saved choice it follows the device's light or dark setting. Dusk turns the sun into a crescent moon, gives the sand its own night texture, and lights the lantern in the mine.
+- **Atmosphere.** Drifting dust that changes colour with the section behind it, a sand texture on the paper sections, and a crosshair cursor that replaces the system pointer on desktop (text fields keep their caret). All of it stops with reduced motion; high contrast restores the system pointer.
 - **Accessibility panel.** Dusk mode, reduced motion, high contrast and text size from 100 to 125%, saved in the browser. The device's reduced-motion setting always wins. Wooden plates and signs keep their own colours and meet text contrast in every mode.
 - **Readable by default.** Body text sits on wooden plates or parchment, headings never wrap mid-word, and keyboard focus is clearly visible on every control.
 - **Works without JavaScript** for the landscape, navigation and campus still. Personal content and the form need JavaScript.
@@ -49,6 +50,8 @@ The site is a late-1800s frontier bounty board: wooden signs and plates, parchme
 │   ├── js/                   data.js (all content), main.js, particles.js, cursor.js
 │   ├── img/                  project previews, UMN logo, campus stills, social card
 │   ├── icons/                favicon.svg, apple-touch-icon.png, icon-192.png, icon-512.png
+│   │   ├── skills/           tool logos for the Gear & Skills chips
+│   │   └── flags/            language flags
 │   ├── models/               umn-campus.glb (Draco-compressed)
 │   └── cv.pdf
 └── .github/workflows/deploy.yml
@@ -78,7 +81,7 @@ Then open `http://localhost:8080/`.
 node check.mjs
 ```
 
-It validates the data shape, anchors and ARIA references; that every referenced file exists (images, icons, manifest, CV); that the campus model is Draco-compressed and at most 300 KB; that nothing sets `auto-rotate`; that model-viewer is pinned and loaded only from `main.js`; and that no `<h2>` contains a `<br>`.
+It validates the data shape (including each skill category's tools, tags and size), anchors and ARIA references; that every referenced file exists (images, icons, skill logos, flags, manifest, CV); that the campus model is Draco-compressed and at most 300 KB; that nothing sets `auto-rotate`; that model-viewer is pinned and loaded only from `main.js`; and that no `<h2>` contains a `<br>`.
 
 `node check.mjs --sync-meta` copies the title, description and Open Graph tags from `data.js` into `index.html`, for crawlers that do not run JavaScript. It needs `seo.url` to be set first.
 
@@ -104,7 +107,8 @@ A manual GitHub Pages workflow is also included (`.github/workflows/deploy.yml`)
 
 ## Credits and licences
 
-- Code, CSS, SVG artwork and icons: [MIT](LICENSE).
+- Code, CSS, SVG artwork (desert, plank, bounty sheet, mine, lantern, rocks), the flags and the site icons: [MIT](LICENSE).
+- Skill logos in `assets/icons/skills/`: [Devicon](https://devicon.dev/) (MIT) for Python, Java, JavaScript, SQL, Docker, Linux, VS Code, Conda, Jupyter and GitHub; [SVG Logos](https://github.com/gilbarbara/logos) (CC0) for Tableau and Power BI; [VSCode Icons](https://github.com/vscode-icons/vscode-icons) (MIT) for Excel; [theSVG](https://github.com/glincker/thesvg) (MIT) for Proxmox. The logos themselves are trademarks of their owners and are shown only to name the tools.
 - Fonts: [Rye](https://fonts.google.com/specimen/Rye), [IM Fell English](https://fonts.google.com/specimen/IM+Fell+English), [IM Fell English SC](https://fonts.google.com/specimen/IM+Fell+English+SC) and [Special Elite](https://fonts.google.com/specimen/Special+Elite), served by Google Fonts under the SIL Open Font License or the Apache licence shown on each specimen page.
 - [GSAP and ScrollTrigger](https://gsap.com/) under GSAP's [standard licence](https://gsap.com/community/standard-license/).
 - [`<model-viewer>`](https://modelviewer.dev/) by Google (Apache-2.0) and [Draco](https://google.github.io/draco/) by Google (Apache-2.0). Compression with [glTF Transform](https://gltf-transform.dev/) (MIT).
